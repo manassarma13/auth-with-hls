@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+	<nav class="nav nav-masthead justify-content-center float-md-end">
+		<form action="/logout?_method=DELETE" method="POST">
+			<button class="nav-link fw-bold py-1 px-0 btn p=3 btn-dark text-white" type="submit">Logout</button>
+		</form>
+	</nav>
+	<div id="videoContainer"></div>
+	<script>
+		function playVideo() {
+			var videoUrl = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8";
+			var videoContainer = document.getElementById('videoContainer');
+
+			// Destroy previous video player instance
+			if (window.videoPlayer) {
+				window.videoPlayer.destroy();
+			}
+
+			if (Hls.isSupported()) {
+				var video = document.createElement('video');
+				video.id = 'videoPlayer';
+				video.controls = true;
+				video.preload = true;
+				video.style.width = '100%';
+				video.style.height = 'auto';
+				videoContainer.innerHTML = '';
+				videoContainer.appendChild(video);
+
+				var hls = new Hls();
+				hls.loadSource(videoUrl);
+				hls.attachMedia(video);
+				window.videoPlayer = hls;
+			} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+				video.src = videoUrl;
+				video.addEventListener('canplay', function () {
+					video.play();
+				});
+				videoContainer.innerHTML = '';
+				videoContainer.appendChild(video);
+			} else {
+				videoContainer.innerHTML = 'HLS is not supported on this browser.';
+			}
+		}
+		playVideo();
+	</script>
+	<script>
+		setInterval(() => {
+			console.log("online");
+		}, 1000);
+	</script>
+</body>
+
+</html>
