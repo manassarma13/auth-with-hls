@@ -2,11 +2,9 @@ if (process.env.NODE_ENV !== "production") {
 	require("dotenv").config()
 }
 
-
-// Importing Libraies that we installed using npm
 const express = require("express")
 const app = express()
-const bcrypt = require("bcrypt") // Importing bcrypt package
+const bcrypt = require("bcrypt") 
 const passport = require("passport")
 const initializePassport = require("./passport-config")
 const flash = require("express-flash")
@@ -18,8 +16,6 @@ initializePassport(
 	email => users.find(user => user.email === email),
 	id => users.find(user => user.id === id)
 )
-
-
 
 const users = []
 
@@ -34,14 +30,12 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride("_method"))
 
-// Configuring the register post functionality
 app.post("/login", checkNotAuthenticated, passport.authenticate("local", {
 	successRedirect: "/",
 	failureRedirect: "/login",
 	failureFlash: true
 }))
 
-// Configuring the register post functionality
 app.post("/register", checkNotAuthenticated, async (req, res) => {
 
 	try {
@@ -73,12 +67,6 @@ app.get('/login', checkNotAuthenticated, (req, res) => {
 app.get('/register', checkNotAuthenticated, (req, res) => {
 	res.render("register.ejs")
 })
-// End Routes
-
-// app.delete('/logout', (req, res) => {
-//     req.logOut()
-//     res.redirect('/login')
-//   })
 
 app.delete("/logout", (req, res) => {
 	req.logout(req.user, err => {
